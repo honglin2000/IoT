@@ -42,54 +42,50 @@ void loop() {
     //double mag = sqrt(pow(a.acceleration.x, 2) + pow(a.acceleration.y, 2) + pow(a.acceleration.z, 2));
     //client.println(mag);
 
-    if (Amp <= 2 && trigger2 == false)
-    { //if amplitude breaks lower threshold (0.4g)
+    if (Amp <= 2 && trigger2 == false) { 
+      //if amplitude breaks lower threshold (0.4g)
       trigger1 = true;
       Serial.println("TRIGGER 1 ACTIVATED");
     }
-    if (trigger1 == true)
-    {
+    if (trigger1 == true) {
       trigCount1++;
-      if (Amp >= 12)
-      { //if AM breaks upper threshold (3g)
+      if (Amp >= 12) {
+        //if AM breaks upper threshold (3g)
         trigger2 = true;
         Serial.println("TRIGGER 2 ACTIVATED");
         trigger1 = false; trigCount1 = 0;
       }
     }
-    if (trigger2 == true)
-    {
+    if (trigger2 == true) {
       trigCount2++;
       angleChange = pow(pow(g.gyro.x, 2) + pow(g.gyro.y, 2) + pow(g.gyro.z, 2), 0.5); Serial.println(angleChange);
-      if (angleChange >= 30 && angleChange <= 400)
-      { //if orientation changes by between 80-100 degrees
+      if (angleChange >= 30 && angleChange <= 400) {
+        //if orientation changes by between 80-100 degrees
         trigger3 = true; trigger2 = false; trigCount2 = 0;
         Serial.println(angleChange);
         Serial.println("TRIGGER 3 ACTIVATED");
       }
     }
-    if (trigger3 == true)
-    {
+    if (trigger3 == true) {
       trigCount3++;
-      if (trigCount3 >= 10)
-      {
+      if (trigCount3 >= 10) {
         angleChange = pow(pow(g.gyro.x, 2) + pow(g.gyro.y, 2) + pow(g.gyro.z, 2), 0.5);
         //delay(10);
         Serial.println(angleChange);
-        if ((angleChange >= 0) && (angleChange <= 10))
-        { //if orientation changes remains between 0-10 degrees
+        if ((angleChange >= 0) && (angleChange <= 10)) {
+          //if orientation changes remains between 0-10 degrees
           fall = true; trigger3 = false; trigCount3 = 0;
           Serial.println(angleChange);
         }
-        else
-        { //user regained normal orientation
+        else {
+          //user regained normal orientation
           trigger3 = false; trigCount3 = 0;
           Serial.println("TRIGGER 3 DEACTIVATED");
         }
       }
     }
-    if (fall == true)
-    { //in event of a fall detection
+    if (fall == true) {
+      //in event of a fall detection
       Serial.println("FALL DETECTED");
       //send_event("fall_detect");
       fall = false;
@@ -110,21 +106,21 @@ void loop() {
 
 void mpu_read() {
   mpu.getEvent(&a, &g, &temp);
-  Serial.print("Acceleration X: ");
-  Serial.print(a.acceleration.x);
-  Serial.print(", Y: ");
-  Serial.print(a.acceleration.y);
-  Serial.print(", Z: ");
-  Serial.print(a.acceleration.z);
-  Serial.println(" m/s^2");
-
-  Serial.print("Rotation X: ");
-  Serial.print(g.gyro.x);
-  Serial.print(", Y: ");
-  Serial.print(g.gyro.y);
-  Serial.print(", Z: ");
-  Serial.print(g.gyro.z);
-  Serial.println(" rad/s");
+  //  Serial.print("Acceleration X: ");
+  //  Serial.print(a.acceleration.x);
+  //  Serial.print(", Y: ");
+  //  Serial.print(a.acceleration.y);
+  //  Serial.print(", Z: ");
+  //  Serial.print(a.acceleration.z);
+  //  Serial.println(" m/s^2");
+  //
+  //  Serial.print("Rotation X: ");
+  //  Serial.print(g.gyro.x);
+  //  Serial.print(", Y: ");
+  //  Serial.print(g.gyro.y);
+  //  Serial.print(", Z: ");
+  //  Serial.print(g.gyro.z);
+  //  Serial.println(" rad/s");
   delay(1000);
 }
 
@@ -157,5 +153,3 @@ void connectToServer() {
     Serial.println("Failed to connect to server.");
   }
 }
-
-
