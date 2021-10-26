@@ -23,6 +23,7 @@ int angleChange = 0;
 void setup() {
   Serial.begin(9600);
   pinMode(BUZZER_PIN, OUTPUT);
+  ledcAttachPin(13, 0);
   Wire.begin(21, 22, 100000);
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x6B);  // PWR_MGMT_1 register
@@ -121,8 +122,10 @@ void loop() {
       //in event of a fall detection
       Serial.println("FALL DETECTED");
       digitalWrite(BUZZER_PIN, HIGH);
+      ledcWriteTone(0, 294);
       delay(3000);
       digitalWrite(BUZZER_PIN, LOW);
+      ledcWriteTone(0, 0);
       fall = false;
     }
     if (trigCount1 >= 6) {
