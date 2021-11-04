@@ -6,8 +6,8 @@
 #define WIFI_TIMEOUT_MS 20000
 //const char* ssid = "AFM";                   // wifi ssid
 //const char* password =  "88888888";         // wifi password
-const char* mqttServer = "192.168.68.116";    // IP adress Raspberry Pi
-//IPAddress mqttServer(address[0], address[1], address[2], address[3]);
+//const char* mqttServer = "192.168.68.116";    // IP adress Raspberry Pi
+IPAddress mqttServer(address[0], address[1], address[2], address[3]);
 const int mqttPort = 1883;
 //const char* mqttUser = "username";      // if you don't have MQTT Username, no need input
 //const char* mqttPassword = "12345678";  // if you don't have MQTT Password, no need input
@@ -91,7 +91,7 @@ void connectToWiFi() {
 }
 
 void connectToServer() {
-  if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
+  if (client.connect("ESP32Client", MQTT_USER, MQTT_PASSWORD)) {
     Serial.println("Connected to server.");
   } else {
     Serial.println("Failed to connect to server.");
