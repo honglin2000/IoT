@@ -1,41 +1,58 @@
+
 from tb_device_mqtt import TBDeviceMqttClient, TBPublishInfo
+import paho.mqtt.client as mqtt  		    #mqtt library
+import os
+import json
 import serial
 import time
-
-thingsboard_server = 'thingsboard.cloud'
-access_token = '350sGET8k4P4IMtV0BBA'
+from datetime import datetime
 
 
-def main():	
+ACCESS_TOKEN='uj7UHFY8EEdjjiTNjKEB'         #Token of your device
+broker="thingsboard.cloud"         #host name
+port=1883       #data listening port
 
-	def on_server_side_rpc_request(client,request_id,request_body):
-		if request_body['method'] == 'setLockValueB':
-			global lock
-			lock = bool(request_body['params'])
-			if (lock):
-				print('Entrance Lock')
-			elif (lock == False):
-				print('Entrance Lock')
-		elif request_body['method'] == 'setTempValueB':
-			global threshold
-			threshold = float(request_body['params'])
-			print(threshold)
-			
-	client = TBDeviceMqttClient(thingsboard_server, access_token)
-	client.set_server_side_rpc_request_handler(on_server_side_rpc_request)
-	client.connect()
+MQTT_ADDRESS = '192.168.68.116'
+MQTT_USER = 'iot'
+MQTT_PASSWORD = 'iot'
+MQTT_TOPIC = 'home/+/+'
 
+def on_connect(client, userdata, flags, rc):
+    """ The callback for when the client receives a CONNACK response from the server."""
+    print('Connected with result code ' + str(rc))
+    client.subscribe(MQTT_TOPIC)
 
-
-
-
-f __name__ == "__main__":
-    main()
+def on_message(client, userdata, msg):
+    """The callback for when a PUBLISH message is received from the server."""
+    #print(msg.topic + ' ' + str(msg.payload))
+    print(str(msg.payload.decode("utf-8")))
+    ax = str(msg.payload.decode("utf-8")[0:4])
+    #ax = int(axx[2:6])
+    ay = str(msg.payload.decode("utf-8")[5:9])
+    az = str(msg.payload.decode("utf-8")[10:14])
+    fall_value = str(msg.payload.decode("utf-8")[15:16])
+    #print(ax)
+    #return(ax,ay,az,fall_value)
+    client1 = TBDeviceMqttClient(broker, ACCESS_TOKEN)
+    client1.connect()
+    telemetry = {'accel_x': ax,'accel_y': ay, 'accel_z': az, 'fall': fall_value}
+    client1.send_telemetry(telemetry).get()
+    #time.sleep(5)
     
-    # Create TCP/IP socket
-    print("Intializing TCP server... ", end="")
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server_socket.bind(("", 12345))
-    server_socket.listen(1)
-    print("Initialized.")
+    
+def main():
+    mqtt_client = mqtt.Client()
+    mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
+    mqtt_client.on_connect = on_connect
+    mqtt_client.on_message = on_message
+    #mqtt_client.on_publish = on_publish
+    
+    mqtt_client.connect(MQTT_ADDRESS, 1883)
+    mqtt_client.loop_forever()
+    
+
+if __name__ == '__main__':
+    #print('MQTT to InfluxDB bridge')
+    main()
+
+
