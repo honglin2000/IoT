@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 
 
-ACCESS_TOKEN='uj7UHFY8EEdjjiTNjKEB'         #Token of your device
+ACCESS_TOKEN='change this'         #Token of your device
 broker="thingsboard.cloud"         #host name
 port=1883       #data listening port
 
