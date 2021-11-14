@@ -35,8 +35,8 @@ byte trigger3count = 0; //stores the counts past since trigger 3 was set true
 int angleChange = 0;
 
 // WiFi network info.
-const char *ssid = "thc_2.4G\\5G"; // Enter your Wi-Fi Name
-const char *pass = "sa0166266285q"; // Enter your Wi-Fi Password
+const char *ssid = "change this"; // Enter your Wi-Fi Name
+const char *pass = "change this"; // Enter your Wi-Fi Password
 
 
 void setup() {
