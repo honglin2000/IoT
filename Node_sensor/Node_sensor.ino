@@ -149,7 +149,7 @@ void loop() {
       trigger1 = false; trigCount1 = 0;
       Serial.println("TRIGGER 1 DECACTIVATED");
     }
-    delay(200);
+    delay(100);
     ////////////////////////////////////////////////////////////
 
   } else if (WiFi.status() != WL_CONNECTED) {
